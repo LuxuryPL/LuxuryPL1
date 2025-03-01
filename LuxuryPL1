@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiedy spadną metiny</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1e1e1e;
+            color: white;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 36px;
+        }
+        #countdown, #lastResp, #nextResps {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        #countdown {
+            color: #ffcc00;
+        }
+        #lastResp {
+            color: #ff4444;
+        }
+        .resp-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kiedy spadną metiny?</h1>
+    <p>Najbliższy resp: <span id="countdown"></span></p>
+    <p>Ostatni resp: <span id="lastResp"></span></p>
+    
+    <button onclick="showNextResps()">Kolejne 12 respów</button>
+    <div id="nextResps" class="resp-list"></div>
+
+    <script>
+        const respawnInterval = 1 * 60 * 60 * 1000 + 1 * 60 * 1000; // 1 godzina 1 minuta
+
+        function getNextRespawnTime() {
+            const now = new Date();
+            const referenceTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // Północ
+            let nextRespawn = referenceTime.getTime();
+
+            while (nextRespawn <= now.getTime()) {
+                nextRespawn += respawnInterval;
+            }
+
+            return nextRespawn;
+        }
+
+        function updateCountdown() {
+            const nextRespawn = getNextRespawnTime();
+            const now = new Date().getTime();
+            const timeLeft = nextRespawn - now;
+            const lastRespawn = nextRespawn - respawnInterval;
+
+            if (timeLeft <= 0) {
+                document.getElementById("countdown").innerHTML = "Metiny już spadły!";
+            } else {
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML = `${minutes} minut, ${seconds} sekund`;
+            }
+
+            const lastMinutes
